@@ -1,12 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil</title>
-</head>
-<body>
-    <h1>Perfil do Usuário: {{ usuario }}</h1>
+  </head>
+  <body>
+    <h1>Perfil do Usuário: {{ usuario.username }}</h1>
     <a href="{{ url_for('logout') }}">Sair</a>
-</body>
+
+    {% for foto in usuario.fotos %}
+    <div>
+      <h2>{{ foto.titulo }}</h2>
+      <img
+        src="{{ url_for('static', filename='uploads/' + foto.imagem) }}"
+        alt="{{ foto.titulo }}"
+      />
+    </div>
+    {% endfor %}
+  </body>
 </html>

@@ -14,7 +14,7 @@ def homepage():
             login_user(usuario, remember=True)
             return redirect(url_for("perfil", usuario=usuario.username))
     return render_template("homepage.html", form=formlogin)
-    
+
 
 @app.route("/criar_conta", methods=["GET", "POST"])
 def criar_conta():
@@ -31,14 +31,18 @@ def criar_conta():
         database.session.add(usuario)
         database.session.commit()
         login_user(usuario, remember=True)
-        return redirect(url_for("perfil", usuario=usuario.username))
+        return redirect(url_for("perfil", id_usuario=usuario.id))
     return render_template("criar_conta.html", form=form_criarconta)
 
 
-@app.route("/perfil/<usuario>")
+@app.route("/perfil/<id_usuario>")
 @login_required
-def perfil(usuario):
-    return render_template("perfil.html", usuario=usuario)
+def perfil(id_usuario): 
+    if int(id_usuario) == current_user.id:
+        return render_template("perfil.html", usuario=current_user)
+    else:
+        usuario = Usuario.query.get(int(id_usuario))
+        return render_template("perfil.html", usuario=usuario)
 
 @app.route("/logout")
 @login_required 
