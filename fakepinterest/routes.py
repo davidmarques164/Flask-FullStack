@@ -1,24 +1,35 @@
-from flask import render_template, url_for
-from fakepinterest import app
+from flask import render_template, url_for, redirect
+from fakepinterest import app, bcrypt, database
 from flask_login import current_user, login_required
 from fakepinterest.forms import FormLogin, FormCriarConta
+from fakepinterest.models import Usuario, Foto
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route("/", methods=["GET", "POST"])
 def homepage():
     formlogin = FormLogin()
-    return render_template('homepage.html', form=formlogin)
+    return render_template("homepage.html", form=formlogin)
 
-@app.route('/criar_conta', methods=['GET', 'POST'])
+
+@app.route("/criar_conta", methods=["GET", "POST"])
 def criar_conta():
-    formcriarconta = FormCriarConta()
-    return render_template('criar_conta.html', form=formcriarconta)  
+    form_criarconta = FormCriarConta()
+    if form_criarconta.validate_on_submit():
+        senhasenhacriptografada = bcrypt.generate_password_hash(
+            form_criarconta.senha.data
+        ).decode("utf-8")
+        usuario = Usuario(
+            email=form_criarconta.email.data,
+            username=form_criarconta.username.data,
+            senha=senhasenhacriptografada,
+        )
+        database.session.add(usuario)
+        database.session.commit()
+        return redirect(url_for("perfil", usuario=usuario.username))
+    return render_template("criar_conta.html", form=form_criarconta)
 
-@app.route('/login')
-def login():
-    formlogin = FormLogin()
-    return render_template('login.html', form=formlogin)
 
-@app.route('/perfil/<usuario>')
+@app.route("/perfil/<usuario>")
 @login_required
-def perfil(usuario):    
-    return render_template('perfil.html', usuario=usuario)
+def perfil(usuario):
+    return render_template("perfil.html", usuario=usuario)

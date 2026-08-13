@@ -12,7 +12,7 @@
     <h2>Agora vamos continuar</h2>
 
     {% block formulario %}
-    <form method="POST" action="{{ url_for('login') }}">
+    <form method="POST">
       {{form.csrf_token}} 
 
       {{ form.email.label() }}
@@ -21,7 +21,8 @@
       {{ form.senha.label() }}       
       {{ form.senha() }}
         
-      {{form.botao_confirmacao()}}      
+      {{form.botao_confirmacao()}}
+      {{form.botao_cadastro()}}    
       
     </form>
     {% endblock %}
