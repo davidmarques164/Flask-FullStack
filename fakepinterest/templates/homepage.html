@@ -14,18 +14,19 @@
     {% block formulario %}
     <form method="POST">
       {{form.csrf_token}} 
-
-      {{ form.email.label() }}
-      {{ form.email() }}
-       
-      {{ form.senha.label() }}       
-      {{ form.senha() }}
-        
+      {{ form.email.label() }} 
+      {{ form.email() }} 
+      {{ form.senha.label() }} 
+      {{ form.senha() }} 
       {{form.botao_confirmacao()}}
-      {{form.botao_cadastro()}}    
-      
+
+    <p>
+      Ainda não tem conta?
+      <a href="{{ url_for('criar_conta') }}">Cadastre-se</a>
+    </p>
     </form>
     {% endblock %}
+
   </body>
   {% endblock %}
 </html>
