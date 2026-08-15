@@ -6,6 +6,7 @@
     <title>Perfil</title>
   </head>
   <body>
+    {% include "navbar.html" %}
     <h1>Perfil do Usuário: {{ usuario.username }}</h1>
 
     {% if form %}
@@ -22,8 +23,5 @@
     </div>
 {% endfor %}
 
-    <div>      
-      <a href="{{ url_for('logout') }}">Sair</a>
-    </div>
   </body>
 </html>
