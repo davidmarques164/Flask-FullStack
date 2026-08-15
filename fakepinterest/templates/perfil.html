@@ -16,11 +16,11 @@
     </form>
     {% endif %} 
 
-    {% for foto in usuario.fotos %} 
+{% for foto in usuario.fotos %}
     <div>
-      <img src="{{ url_for('static', filename='fotos_post/{}'.format(foto.imagem)) }}" />
-    </div>    
-    {% endfor %}
+      <img src="{{ url_for('static', filename='fotos_posts/{}'.format(foto.imagem)) }}" />
+    </div>
+{% endfor %}
 
     <div>      
       <a href="{{ url_for('logout') }}">Sair</a>

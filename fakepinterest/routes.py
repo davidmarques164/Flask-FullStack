@@ -40,26 +40,25 @@ def criar_conta():
 @app.route("/perfil/<id_usuario>", methods=["GET", "POST"])
 @login_required
 def perfil(id_usuario):
-    if int(id_usuario) == current_user.id:
-        formuploadfotos = FormFoto()
-        if formuploadfotos.validate_on_submit(): 
-            arquivo = formuploadfotos.foto.data
+    if int(id_usuario) == int(current_user.id):
+        # o usuario ta vendo o perfil dele
+        form_foto = FormFoto()
+        if form_foto.validate_on_submit():
+            arquivo = form_foto.foto.data
             nome_seguro = secure_filename(arquivo.filename)
-            caminho_arquivo = os.path.join(os.path.abspath(os.path.dirname(__file__)), 
-                                      app.config["UPLOAD_FOLDER"], nome_seguro)
-            arquivo.save(caminho_arquivo)            
-
+            # salvar o arquivo dentro da pasta certa
+            caminho = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                   app.config["UPLOAD_FOLDER"],
+                                   nome_seguro)
+            arquivo.save(caminho)
+            # criar a foto no banco com o item "imagem" sendo o nome do arqivo
             foto = Foto(imagem=nome_seguro, id_usuario=current_user.id)
             database.session.add(foto)
             database.session.commit()
-            return redirect(url_for("perfil", id_usuario=current_user.id))
-        return render_template(
-            "perfil.html", usuario=current_user, form=formuploadfotos
-        )
+        return render_template("perfil.html", usuario=current_user, form=form_foto)
     else:
         usuario = Usuario.query.get(int(id_usuario))
         return render_template("perfil.html", usuario=usuario, form=None)
-
 
 @app.route("/logout")
 @login_required
